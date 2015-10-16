@@ -1,0 +1,5 @@
+<section class="todoapp">
+  {{todo-header addItem='addItem'}}
+  {{todo-list items=model updateItem='updateItem' removeItem='removeItem' isCompleted='isCompleted' toggleAll='toggleAll'}}
+  {{todo-footer items=model clearCompleted='clearCompleted'}}
+</section>

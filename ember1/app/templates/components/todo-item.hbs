@@ -1,0 +1,10 @@
+<li data-id="{{item.id}}" class="{{if item.isCompleted "completed"}} {{if isEditing "editing"}}">
+  <div class="view">
+    <input class="toggle" type="checkbox" checked="{{if item.isCompleted 'true'}}" onclick={{action 'isCompleted' item}}>
+    <label {{action "editItem" item on="doubleClick"}}>{{item.label}}</label>
+    <button class="destroy" onclick={{action 'removeItem' item}}></button>
+  </div>
+  {{#if isEditing}}
+  <input class="edit" value="{{item.label}}"/>
+  {{/if}}
+</li>

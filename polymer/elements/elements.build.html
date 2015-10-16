@@ -1,0 +1,1923 @@
+<html><head><meta charset="UTF-8"><!--
+@license
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--></head><body>');
+a = '' + a + '';
+try {
+this.Ea.eb.open(), this.Ea.eb.write(a), this.Ea.eb.close();
+} catch (f) {
+Cb('frame writing exception'), f.stack &amp;&amp; Cb(f.stack), Cb(f);
+}
+}
+kh.prototype.close = function () {
+this.le = !1;
+if (this.Ea) {
+this.Ea.eb.body.innerHTML = '';
+var a = this;
+setTimeout(function () {
+null !== a.Ea &amp;&amp; (document.body.removeChild(a.Ea), a.Ea = null);
+}, Math.floor(0));
+}
+var b = this.hb;
+b &amp;&amp; (this.hb = null, b());
+};
+function nh(a) {
+if (a.le &amp;&amp; a.Xd &amp;&amp; a.Pe.count() &lt; (0 &lt; a.ad.length ? 2 : 1)) {
+a.te++;
+var b = {};
+b.id = a.ug;
+b.pw = a.vg;
+b.ser = a.te;
+for (var b = a.jd(b), c = '', d = 0; 0 &lt; a.ad.length;)
+if (1870 &gt;= a.ad[0].kf.length + 30 + c.length) {
+var e = a.ad.shift(), c = c + '&amp;seg' + d + '=' + e.Mg + '&amp;ts' + d + '=' + e.Ug + '&amp;d' + d + '=' + e.kf;
+d++;
+} else
+break;
+oh(a, b + c, a.te);
+return !0;
+}
+return !1;
+}
+function oh(a, b, c) {
+function d() {
+a.Pe.remove(c);
+nh(a);
+}
+a.Pe.add(c, 1);
+var e = setTimeout(d, Math.floor(25000));
+mh(a, b, function () {
+clearTimeout(e);
+d();
+});
+}
+function mh(a, b, c) {
+setTimeout(function () {
+try {
+if (a.Xd) {
+var d = a.Ea.eb.createElement('script');
+d.type = 'text/javascript';
+d.async = !0;
+d.src = b;
+d.onload = d.onreadystatechange = function () {
+var a = d.readyState;
+a &amp;&amp; 'loaded' !== a &amp;&amp; 'complete' !== a || (d.onload = d.onreadystatechange = null, d.parentNode &amp;&amp; d.parentNode.removeChild(d), c());
+};
+d.onerror = function () {
+Cb('Long-poll script failed to load: ' + b);
+a.Xd = !1;
+a.close();
+};
+a.Ea.eb.body.appendChild(d);
+}
+} catch (e) {
+}
+}, Math.floor(1));
+}
+;
+var ph = null;
+'undefined' !== typeof MozWebSocket ? ph = MozWebSocket : 'undefined' !== typeof WebSocket &amp;&amp; (ph = WebSocket);
+function qh(a, b, c, d) {
+this.re = a;
+this.f = Mc(this.re);
+this.frames = this.Kc = null;
+this.nb = this.ob = this.bf = 0;
+this.Ua = Rb(b);
+a = { v: '5' };
+'undefined' !== typeof location &amp;&amp; location.href &amp;&amp; -1 !== location.href.indexOf('firebaseio.com') &amp;&amp; (a.r = 'f');
+c &amp;&amp; (a.s = c);
+d &amp;&amp; (a.ls = d);
+this.ef = Bc(b, Cc, a);
+}
+var rh;
+qh.prototype.open = function (a, b) {
+this.hb = b;
+this.zg = a;
+this.f('Websocket connecting to ' + this.ef);
+this.Hc = !1;
+xc.set('previous_websocket_failure', !0);
+try {
+this.ua = new ph(this.ef);
+} catch (c) {
+this.f('Error instantiating WebSocket.');
+var d = c.message || c.data;
+d &amp;&amp; this.f(d);
+this.gb();
+return;
+}
+var e = this;
+this.ua.onopen = function () {
+e.f('Websocket connected.');
+e.Hc = !0;
+};
+this.ua.onclose = function () {
+e.f('Websocket connection was disconnected.');
+e.ua = null;
+e.gb();
+};
+this.ua.onmessage = function (a) {
+if (null !== e.ua)
+if (a = a.data, e.nb += a.length, Ob(e.Ua, 'bytes_received', a.length), sh(e), null !== e.frames)
+th(e, a);
+else {
+a: {
+K(null === e.frames, 'We already have a frame buffer');
+if (6 &gt;= a.length) {
+var b = Number(a);
+if (!isNaN(b)) {
+e.bf = b;
+e.frames = [];
+a = null;
+break a;
+}
+}
+e.bf = 1;
+e.frames = [];
+}
+null !== a &amp;&amp; th(e, a);
+}
+};
+this.ua.onerror = function (a) {
+e.f('WebSocket error.  Closing connection.');
+(a = a.message || a.data) &amp;&amp; e.f(a);
+e.gb();
+};
+};
+qh.prototype.start = function () {
+};
+qh.isAvailable = function () {
+var a = !1;
+if ('undefined' !== typeof navigator &amp;&amp; navigator.userAgent) {
+var b = navigator.userAgent.match(/Android ([0-9]{0,}\.[0-9]{0,})/);
+b &amp;&amp; 1 &lt; b.length &amp;&amp; 4.4 &gt; parseFloat(b[1]) &amp;&amp; (a = !0);
+}
+return !a &amp;&amp; null !== ph &amp;&amp; !rh;
+};
+qh.responsesRequiredToBeHealthy = 2;
+qh.healthyTimeout = 30000;
+g = qh.prototype;
+g.Ed = function () {
+xc.remove('previous_websocket_failure');
+};
+function th(a, b) {
+a.frames.push(b);
+if (a.frames.length == a.bf) {
+var c = a.frames.join('');
+a.frames = null;
+c = nb(c);
+a.zg(c);
+}
+}
+g.send = function (a) {
+sh(this);
+a = B(a);
+this.ob += a.length;
+Ob(this.Ua, 'bytes_sent', a.length);
+a = Vc(a, 16384);
+1 &lt; a.length &amp;&amp; this.ua.send(String(a.length));
+for (var b = 0; b &lt; a.length; b++)
+this.ua.send(a[b]);
+};
+g.dd = function () {
+this.zb = !0;
+this.Kc &amp;&amp; (clearInterval(this.Kc), this.Kc = null);
+this.ua &amp;&amp; (this.ua.close(), this.ua = null);
+};
+g.gb = function () {
+this.zb || (this.f('WebSocket is closing itself'), this.dd(), this.hb &amp;&amp; (this.hb(this.Hc), this.hb = null));
+};
+g.close = function () {
+this.zb || (this.f('WebSocket is being closed'), this.dd());
+};
+function sh(a) {
+clearInterval(a.Kc);
+a.Kc = setInterval(function () {
+a.ua &amp;&amp; a.ua.send('0');
+sh(a);
+}, Math.floor(45000));
+}
+;
+function uh(a) {
+vh(this, a);
+}
+var wh = [
+hh,
+qh
+];
+function vh(a, b) {
+var c = qh &amp;&amp; qh.isAvailable(), d = c &amp;&amp; !(xc.wf || !0 === xc.get('previous_websocket_failure'));
+b.Wg &amp;&amp; (c || O('wss:// URL used, but browser isn\'t known to support websockets.  Trying anyway.'), d = !0);
+if (d)
+a.gd = [qh];
+else {
+var e = a.gd = [];
+Wc(wh, function (a, b) {
+b &amp;&amp; b.isAvailable() &amp;&amp; e.push(b);
+});
+}
+}
+function xh(a) {
+if (0 &lt; a.gd.length)
+return a.gd[0];
+throw Error('No transports available');
+}
+;
+function yh(a, b, c, d, e, f, h) {
+this.id = a;
+this.f = Mc('c:' + this.id + ':');
+this.jc = c;
+this.Wc = d;
+this.la = e;
+this.Ne = f;
+this.F = b;
+this.Md = [];
+this.ff = 0;
+this.Pf = new uh(b);
+this.Ta = 0;
+this.Bb = h;
+this.f('Connection created');
+zh(this);
+}
+function zh(a) {
+var b = xh(a.Pf);
+a.J = new b('c:' + a.id + ':' + a.ff++, a.F, void 0, a.Bb);
+a.Re = b.responsesRequiredToBeHealthy || 0;
+var c = Ah(a, a.J), d = Bh(a, a.J);
+a.hd = a.J;
+a.cd = a.J;
+a.D = null;
+a.Ab = !1;
+setTimeout(function () {
+a.J &amp;&amp; a.J.open(c, d);
+}, Math.floor(0));
+b = b.healthyTimeout || 0;
+0 &lt; b &amp;&amp; (a.yd = setTimeout(function () {
+a.yd = null;
+a.Ab || (a.J &amp;&amp; 102400 &lt; a.J.nb ? (a.f('Connection exceeded healthy timeout but has received ' + a.J.nb + ' bytes.  Marking connection healthy.'), a.Ab = !0, a.J.Ed()) : a.J &amp;&amp; 10240 &lt; a.J.ob ? a.f('Connection exceeded healthy timeout but has sent ' + a.J.ob + ' bytes.  Leaving connection alive.') : (a.f('Closing unhealthy connection after timeout.'), a.close()));
+}, Math.floor(b)));
+}
+function Bh(a, b) {
+return function (c) {
+b === a.J ? (a.J = null, c || 0 !== a.Ta ? 1 === a.Ta &amp;&amp; a.f('Realtime connection lost.') : (a.f('Realtime connection failed.'), 's-' === a.F.Ya.substr(0, 2) &amp;&amp; (xc.remove('host:' + a.F.host), a.F.Ya = a.F.host)), a.close()) : b === a.D ? (a.f('Secondary connection lost.'), c = a.D, a.D = null, a.hd !== c &amp;&amp; a.cd !== c || a.close()) : a.f('closing an old connection');
+};
+}
+function Ah(a, b) {
+return function (c) {
+if (2 != a.Ta)
+if (b === a.cd) {
+var d = Tc('t', c);
+c = Tc('d', c);
+if ('c' == d) {
+if (d = Tc('t', c), 'd' in c)
+if (c = c.d, 'h' === d) {
+var d = c.ts, e = c.v, f = c.h;
+a.Nf = c.s;
+Ac(a.F, f);
+0 == a.Ta &amp;&amp; (a.J.start(), Ch(a, a.J, d), '5' !== e &amp;&amp; O('Protocol version mismatch detected'), c = a.Pf, (c = 1 &lt; c.gd.length ? c.gd[1] : null) &amp;&amp; Dh(a, c));
+} else if ('n' === d) {
+a.f('recvd end transmission on primary');
+a.cd = a.D;
+for (c = 0; c &lt; a.Md.length; ++c)
+a.Id(a.Md[c]);
+a.Md = [];
+Eh(a);
+} else
+'s' === d ? (a.f('Connection shutdown command received. Shutting down...'), a.Ne &amp;&amp; (a.Ne(c), a.Ne = null), a.la = null, a.close()) : 'r' === d ? (a.f('Reset packet received.  New host: ' + c), Ac(a.F, c), 1 === a.Ta ? a.close() : (Fh(a), zh(a))) : 'e' === d ? Nc('Server Error: ' + c) : 'o' === d ? (a.f('got pong on primary.'), Gh(a), Hh(a)) : Nc('Unknown control packet command: ' + d);
+} else
+'d' == d &amp;&amp; a.Id(c);
+} else if (b === a.D)
+if (d = Tc('t', c), c = Tc('d', c), 'c' == d)
+'t' in c &amp;&amp; (c = c.t, 'a' === c ? Ih(a) : 'r' === c ? (a.f('Got a reset on secondary, closing it'), a.D.close(), a.hd !== a.D &amp;&amp; a.cd !== a.D || a.close()) : 'o' === c &amp;&amp; (a.f('got pong on secondary.'), a.Mf--, Ih(a)));
+else if ('d' == d)
+a.Md.push(c);
+else
+throw Error('Unknown protocol layer: ' + d);
+else
+a.f('message on old connection');
+};
+}
+yh.prototype.Fa = function (a) {
+Jh(this, {
+t: 'd',
+d: a
+});
+};
+function Eh(a) {
+a.hd === a.D &amp;&amp; a.cd === a.D &amp;&amp; (a.f('cleaning up and promoting a connection: ' + a.D.re), a.J = a.D, a.D = null);
+}
+function Ih(a) {
+0 &gt;= a.Mf ? (a.f('Secondary connection is healthy.'), a.Ab = !0, a.D.Ed(), a.D.start(), a.f('sending client ack on secondary'), a.D.send({
+t: 'c',
+d: {
+t: 'a',
+d: {}
+}
+}), a.f('Ending transmission on primary'), a.J.send({
+t: 'c',
+d: {
+t: 'n',
+d: {}
+}
+}), a.hd = a.D, Eh(a)) : (a.f('sending ping on secondary.'), a.D.send({
+t: 'c',
+d: {
+t: 'p',
+d: {}
+}
+}));
+}
+yh.prototype.Id = function (a) {
+Gh(this);
+this.jc(a);
+};
+function Gh(a) {
+a.Ab || (a.Re--, 0 &gt;= a.Re &amp;&amp; (a.f('Primary connection is healthy.'), a.Ab = !0, a.J.Ed()));
+}
+function Dh(a, b) {
+a.D = new b('c:' + a.id + ':' + a.ff++, a.F, a.Nf);
+a.Mf = b.responsesRequiredToBeHealthy || 0;
+a.D.open(Ah(a, a.D), Bh(a, a.D));
+setTimeout(function () {
+a.D &amp;&amp; (a.f('Timed out trying to upgrade.'), a.D.close());
+}, Math.floor(60000));
+}
+function Ch(a, b, c) {
+a.f('Realtime connection established.');
+a.J = b;
+a.Ta = 1;
+a.Wc &amp;&amp; (a.Wc(c, a.Nf), a.Wc = null);
+0 === a.Re ? (a.f('Primary connection is healthy.'), a.Ab = !0) : setTimeout(function () {
+Hh(a);
+}, Math.floor(5000));
+}
+function Hh(a) {
+a.Ab || 1 !== a.Ta || (a.f('sending ping on primary.'), Jh(a, {
+t: 'c',
+d: {
+t: 'p',
+d: {}
+}
+}));
+}
+function Jh(a, b) {
+if (1 !== a.Ta)
+throw 'Connection is not connected';
+a.hd.send(b);
+}
+yh.prototype.close = function () {
+2 !== this.Ta &amp;&amp; (this.f('Closing realtime connection.'), this.Ta = 2, Fh(this), this.la &amp;&amp; (this.la(), this.la = null));
+};
+function Fh(a) {
+a.f('Shutting down all connections');
+a.J &amp;&amp; (a.J.close(), a.J = null);
+a.D &amp;&amp; (a.D.close(), a.D = null);
+a.yd &amp;&amp; (clearTimeout(a.yd), a.yd = null);
+}
+;
+function Kh(a, b, c, d) {
+this.id = Lh++;
+this.f = Mc('p:' + this.id + ':');
+this.xf = this.Ee = !1;
+this.$ = {};
+this.qa = [];
+this.Yc = 0;
+this.Vc = [];
+this.oa = !1;
+this.Za = 1000;
+this.Fd = 300000;
+this.Gb = b;
+this.Uc = c;
+this.Oe = d;
+this.F = a;
+this.sb = this.Aa = this.Ia = this.Bb = this.We = null;
+this.Ob = !1;
+this.Td = {};
+this.Lg = 0;
+this.nf = !0;
+this.Lc = this.Ge = null;
+Mh(this, 0);
+He.ub().Eb('visible', this.Cg, this);
+-1 === a.host.indexOf('fblocal') &amp;&amp; Ge.ub().Eb('online', this.Ag, this);
+}
+var Lh = 0, Nh = 0;
+g = Kh.prototype;
+g.Fa = function (a, b, c) {
+var d = ++this.Lg;
+a = {
+r: d,
+a: a,
+b: b
+};
+this.f(B(a));
+K(this.oa, 'sendRequest call when we\'re not connected not allowed.');
+this.Ia.Fa(a);
+c &amp;&amp; (this.Td[d] = c);
+};
+g.yf = function (a, b, c, d) {
+var e = a.va(), f = a.path.toString();
+this.f('Listen called for ' + f + ' ' + e);
+this.$[f] = this.$[f] || {};
+K(fe(a.n) || !S(a.n), 'listen() called for non-default but complete query');
+K(!this.$[f][e], 'listen() called twice for same path/queryId.');
+a = {
+H: d,
+xd: b,
+Ig: a,
+tag: c
+};
+this.$[f][e] = a;
+this.oa &amp;&amp; Oh(this, a);
+};
+function Oh(a, b) {
+var c = b.Ig, d = c.path.toString(), e = c.va();
+a.f('Listen on ' + d + ' for ' + e);
+var f = { p: d };
+b.tag &amp;&amp; (f.q = ee(c.n), f.t = b.tag);
+f.h = b.xd();
+a.Fa('q', f, function (f) {
+var k = f.d, l = f.s;
+if (k &amp;&amp; 'object' === typeof k &amp;&amp; v(k, 'w')) {
+var m = w(k, 'w');
+ea(m) &amp;&amp; 0 &lt;= Na(m, 'no_index') &amp;&amp; O('Using an unspecified index. Consider adding ' + ('".indexOn": "' + c.n.g.toString() + '"') + ' at ' + c.path.toString() + ' to your security rules for better performance');
+}
+(a.$[d] &amp;&amp; a.$[d][e]) === b &amp;&amp; (a.f('listen response', f), 'ok' !== l &amp;&amp; Ph(a, d, e), b.H &amp;&amp; b.H(l, k));
+});
+}
+g.M = function (a, b, c) {
+this.Aa = {
+ig: a,
+of: !1,
+zc: b,
+md: c
+};
+this.f('Authenticating using credential: ' + a);
+Qh(this);
+(b = 40 == a.length) || (a = $c(a).Bc, b = 'object' === typeof a &amp;&amp; !0 === w(a, 'admin'));
+b &amp;&amp; (this.f('Admin auth credential detected.  Reducing max reconnect time.'), this.Fd = 30000);
+};
+g.ge = function (a) {
+delete this.Aa;
+this.oa &amp;&amp; this.Fa('unauth', {}, function (b) {
+a(b.s, b.d);
+});
+};
+function Qh(a) {
+var b = a.Aa;
+a.oa &amp;&amp; b &amp;&amp; a.Fa('auth', { cred: b.ig }, function (c) {
+var d = c.s;
+c = c.d || 'error';
+'ok' !== d &amp;&amp; a.Aa === b &amp;&amp; delete a.Aa;
+b.of ? 'ok' !== d &amp;&amp; b.md &amp;&amp; b.md(d, c) : (b.of = !0, b.zc &amp;&amp; b.zc(d, c));
+});
+}
+g.Rf = function (a, b) {
+var c = a.path.toString(), d = a.va();
+this.f('Unlisten called for ' + c + ' ' + d);
+K(fe(a.n) || !S(a.n), 'unlisten() called for non-default but complete query');
+if (Ph(this, c, d) &amp;&amp; this.oa) {
+var e = ee(a.n);
+this.f('Unlisten on ' + c + ' for ' + d);
+c = { p: c };
+b &amp;&amp; (c.q = e, c.t = b);
+this.Fa('n', c);
+}
+};
+g.Me = function (a, b, c) {
+this.oa ? Rh(this, 'o', a, b, c) : this.Vc.push({
+$c: a,
+action: 'o',
+data: b,
+H: c
+});
+};
+g.Cf = function (a, b, c) {
+this.oa ? Rh(this, 'om', a, b, c) : this.Vc.push({
+$c: a,
+action: 'om',
+data: b,
+H: c
+});
+};
+g.Jd = function (a, b) {
+this.oa ? Rh(this, 'oc', a, null, b) : this.Vc.push({
+$c: a,
+action: 'oc',
+data: null,
+H: b
+});
+};
+function Rh(a, b, c, d, e) {
+c = {
+p: c,
+d: d
+};
+a.f('onDisconnect ' + b, c);
+a.Fa(b, c, function (a) {
+e &amp;&amp; setTimeout(function () {
+e(a.s, a.d);
+}, Math.floor(0));
+});
+}
+g.put = function (a, b, c, d) {
+Sh(this, 'p', a, b, c, d);
+};
+g.zf = function (a, b, c, d) {
+Sh(this, 'm', a, b, c, d);
+};
+function Sh(a, b, c, d, e, f) {
+d = {
+p: c,
+d: d
+};
+n(f) &amp;&amp; (d.h = f);
+a.qa.push({
+action: b,
+Jf: d,
+H: e
+});
+a.Yc++;
+b = a.qa.length - 1;
+a.oa ? Th(a, b) : a.f('Buffering put: ' + c);
+}
+function Th(a, b) {
+var c = a.qa[b].action, d = a.qa[b].Jf, e = a.qa[b].H;
+a.qa[b].Jg = a.oa;
+a.Fa(c, d, function (d) {
+a.f(c + ' response', d);
+delete a.qa[b];
+a.Yc--;
+0 === a.Yc &amp;&amp; (a.qa = []);
+e &amp;&amp; e(d.s, d.d);
+});
+}
+g.Ue = function (a) {
+this.oa &amp;&amp; (a = { c: a }, this.f('reportStats', a), this.Fa('s', a, function (a) {
+'ok' !== a.s &amp;&amp; this.f('reportStats', 'Error sending stats: ' + a.d);
+}));
+};
+g.Id = function (a) {
+if ('r' in a) {
+this.f('from server: ' + B(a));
+var b = a.r, c = this.Td[b];
+c &amp;&amp; (delete this.Td[b], c(a.b));
+} else {
+if ('error' in a)
+throw 'A server-side error has occurred: ' + a.error;
+'a' in a &amp;&amp; (b = a.a, c = a.b, this.f('handleServerMessage', b, c), 'd' === b ? this.Gb(c.p, c.d, !1, c.t) : 'm' === b ? this.Gb(c.p, c.d, !0, c.t) : 'c' === b ? Uh(this, c.p, c.q) : 'ac' === b ? (a = c.s, b = c.d, c = this.Aa, delete this.Aa, c &amp;&amp; c.md &amp;&amp; c.md(a, b)) : 'sd' === b ? this.We ? this.We(c) : 'msg' in c &amp;&amp; 'undefined' !== typeof console &amp;&amp; console.log('FIREBASE: ' + c.msg.replace('\n', '\nFIREBASE: ')) : Nc('Unrecognized action received from server: ' + B(b) + '\nAre you using the latest client?'));
+}
+};
+g.Wc = function (a, b) {
+this.f('connection ready');
+this.oa = !0;
+this.Lc = new Date().getTime();
+this.Oe({ serverTimeOffset: a - new Date().getTime() });
+this.Bb = b;
+if (this.nf) {
+var c = {};
+c['sdk.js.' + hb.replace(/\./g, '-')] = 1;
+yg() &amp;&amp; (c['framework.cordova'] = 1);
+this.Ue(c);
+}
+Vh(this);
+this.nf = !1;
+this.Uc(!0);
+};
+function Mh(a, b) {
+K(!a.Ia, 'Scheduling a connect when we\'re already connected/ing?');
+a.sb &amp;&amp; clearTimeout(a.sb);
+a.sb = setTimeout(function () {
+a.sb = null;
+Wh(a);
+}, Math.floor(b));
+}
+g.Cg = function (a) {
+a &amp;&amp; !this.Ob &amp;&amp; this.Za === this.Fd &amp;&amp; (this.f('Window became visible.  Reducing delay.'), this.Za = 1000, this.Ia || Mh(this, 0));
+this.Ob = a;
+};
+g.Ag = function (a) {
+a ? (this.f('Browser went online.'), this.Za = 1000, this.Ia || Mh(this, 0)) : (this.f('Browser went offline.  Killing connection.'), this.Ia &amp;&amp; this.Ia.close());
+};
+g.Df = function () {
+this.f('data client disconnected');
+this.oa = !1;
+this.Ia = null;
+for (var a = 0; a &lt; this.qa.length; a++) {
+var b = this.qa[a];
+b &amp;&amp; 'h' in b.Jf &amp;&amp; b.Jg &amp;&amp; (b.H &amp;&amp; b.H('disconnect'), delete this.qa[a], this.Yc--);
+}
+0 === this.Yc &amp;&amp; (this.qa = []);
+this.Td = {};
+Xh(this) &amp;&amp; (this.Ob ? this.Lc &amp;&amp; (30000 &lt; new Date().getTime() - this.Lc &amp;&amp; (this.Za = 1000), this.Lc = null) : (this.f('Window isn\'t visible.  Delaying reconnect.'), this.Za = this.Fd, this.Ge = new Date().getTime()), a = Math.max(0, this.Za - (new Date().getTime() - this.Ge)), a *= Math.random(), this.f('Trying to reconnect in ' + a + 'ms'), Mh(this, a), this.Za = Math.min(this.Fd, 1.3 * this.Za));
+this.Uc(!1);
+};
+function Wh(a) {
+if (Xh(a)) {
+a.f('Making a connection attempt');
+a.Ge = new Date().getTime();
+a.Lc = null;
+var b = q(a.Id, a), c = q(a.Wc, a), d = q(a.Df, a), e = a.id + ':' + Nh++;
+a.Ia = new yh(e, a.F, b, c, d, function (b) {
+O(b + ' (' + a.F.toString() + ')');
+a.xf = !0;
+}, a.Bb);
+}
+}
+g.yb = function () {
+this.Ee = !0;
+this.Ia ? this.Ia.close() : (this.sb &amp;&amp; (clearTimeout(this.sb), this.sb = null), this.oa &amp;&amp; this.Df());
+};
+g.rc = function () {
+this.Ee = !1;
+this.Za = 1000;
+this.Ia || Mh(this, 0);
+};
+function Uh(a, b, c) {
+c = c ? Qa(c, function (a) {
+return Uc(a);
+}).join('$') : 'default';
+(a = Ph(a, b, c)) &amp;&amp; a.H &amp;&amp; a.H('permission_denied');
+}
+function Ph(a, b, c) {
+b = new L(b).toString();
+var d;
+n(a.$[b]) ? (d = a.$[b][c], delete a.$[b][c], 0 === pa(a.$[b]) &amp;&amp; delete a.$[b]) : d = void 0;
+return d;
+}
+function Vh(a) {
+Qh(a);
+r(a.$, function (b) {
+r(b, function (b) {
+Oh(a, b);
+});
+});
+for (var b = 0; b &lt; a.qa.length; b++)
+a.qa[b] &amp;&amp; Th(a, b);
+for (; a.Vc.length;)
+b = a.Vc.shift(), Rh(a, b.action, b.$c, b.data, b.H);
+}
+function Xh(a) {
+var b;
+b = Ge.ub().kc;
+return !a.xf &amp;&amp; !a.Ee &amp;&amp; b;
+}
+;
+var V = {
+og: function () {
+ih = rh = !0;
+}
+};
+V.forceLongPolling = V.og;
+V.pg = function () {
+jh = !0;
+};
+V.forceWebSockets = V.pg;
+V.Pg = function (a, b) {
+a.k.Ra.We = b;
+};
+V.setSecurityDebugCallback = V.Pg;
+V.Ye = function (a, b) {
+a.k.Ye(b);
+};
+V.stats = V.Ye;
+V.Ze = function (a, b) {
+a.k.Ze(b);
+};
+V.statsIncrementCounter = V.Ze;
+V.sd = function (a) {
+return a.k.sd;
+};
+V.dataUpdateCount = V.sd;
+V.sg = function (a, b) {
+a.k.De = b;
+};
+V.interceptServerData = V.sg;
+V.yg = function (a) {
+new Ig(a);
+};
+V.onPopupOpen = V.yg;
+V.Ng = function (a) {
+sg = a;
+};
+V.setAuthenticationServer = V.Ng;
+function Q(a, b, c) {
+this.A = a;
+this.W = b;
+this.g = c;
+}
+Q.prototype.I = function () {
+x('Firebase.DataSnapshot.val', 0, 0, arguments.length);
+return this.A.I();
+};
+Q.prototype.val = Q.prototype.I;
+Q.prototype.mf = function () {
+x('Firebase.DataSnapshot.exportVal', 0, 0, arguments.length);
+return this.A.I(!0);
+};
+Q.prototype.exportVal = Q.prototype.mf;
+Q.prototype.ng = function () {
+x('Firebase.DataSnapshot.exists', 0, 0, arguments.length);
+return !this.A.e();
+};
+Q.prototype.exists = Q.prototype.ng;
+Q.prototype.u = function (a) {
+x('Firebase.DataSnapshot.child', 0, 1, arguments.length);
+ga(a) &amp;&amp; (a = String(a));
+ig('Firebase.DataSnapshot.child', a);
+var b = new L(a), c = this.W.u(b);
+return new Q(this.A.Q(b), c, N);
+};
+Q.prototype.child = Q.prototype.u;
+Q.prototype.Da = function (a) {
+x('Firebase.DataSnapshot.hasChild', 1, 1, arguments.length);
+ig('Firebase.DataSnapshot.hasChild', a);
+var b = new L(a);
+return !this.A.Q(b).e();
+};
+Q.prototype.hasChild = Q.prototype.Da;
+Q.prototype.C = function () {
+x('Firebase.DataSnapshot.getPriority', 0, 0, arguments.length);
+return this.A.C().I();
+};
+Q.prototype.getPriority = Q.prototype.C;
+Q.prototype.forEach = function (a) {
+x('Firebase.DataSnapshot.forEach', 1, 1, arguments.length);
+A('Firebase.DataSnapshot.forEach', 1, a, !1);
+if (this.A.K())
+return !1;
+var b = this;
+return !!this.A.P(this.g, function (c, d) {
+return a(new Q(d, b.W.u(c), N));
+});
+};
+Q.prototype.forEach = Q.prototype.forEach;
+Q.prototype.wd = function () {
+x('Firebase.DataSnapshot.hasChildren', 0, 0, arguments.length);
+return this.A.K() ? !1 : !this.A.e();
+};
+Q.prototype.hasChildren = Q.prototype.wd;
+Q.prototype.name = function () {
+O('Firebase.DataSnapshot.name() being deprecated. Please use Firebase.DataSnapshot.key() instead.');
+x('Firebase.DataSnapshot.name', 0, 0, arguments.length);
+return this.key();
+};
+Q.prototype.name = Q.prototype.name;
+Q.prototype.key = function () {
+x('Firebase.DataSnapshot.key', 0, 0, arguments.length);
+return this.W.key();
+};
+Q.prototype.key = Q.prototype.key;
+Q.prototype.Db = function () {
+x('Firebase.DataSnapshot.numChildren', 0, 0, arguments.length);
+return this.A.Db();
+};
+Q.prototype.numChildren = Q.prototype.Db;
+Q.prototype.Ib = function () {
+x('Firebase.DataSnapshot.ref', 0, 0, arguments.length);
+return this.W;
+};
+Q.prototype.ref = Q.prototype.Ib;
+function Yh(a, b) {
+this.F = a;
+this.Ua = Rb(a);
+this.fd = null;
+this.da = new vb();
+this.Hd = 1;
+this.Ra = null;
+b || 0 &lt;= ('object' === typeof window &amp;&amp; window.navigator &amp;&amp; window.navigator.userAgent || '').search(/googlebot|google webmaster tools|bingbot|yahoo! slurp|baiduspider|yandexbot|duckduckbot/i) ? (this.ba = new Ae(this.F, q(this.Gb, this)), setTimeout(q(this.Uc, this, !0), 0)) : this.ba = this.Ra = new Kh(this.F, q(this.Gb, this), q(this.Uc, this), q(this.Oe, this));
+this.Sg = Sb(a, q(function () {
+return new Mb(this.Ua, this.ba);
+}, this));
+this.uc = new Rf();
+this.Ce = new ob();
+var c = this;
+this.Cd = new vf({
+Xe: function (a, b, f, h) {
+b = [];
+f = c.Ce.j(a.path);
+f.e() || (b = xf(c.Cd, new Xb(bf, a.path, f)), setTimeout(function () {
+h('ok');
+}, 0));
+return b;
+},
+ae: ba
+});
+Zh(this, 'connected', !1);
+this.la = new qc();
+this.M = new Sg(a, q(this.ba.M, this.ba), q(this.ba.ge, this.ba), q(this.Le, this));
+this.sd = 0;
+this.De = null;
+this.L = new vf({
+Xe: function (a, b, f, h) {
+c.ba.yf(a, f, b, function (b, e) {
+var f = h(b, e);
+Ab(c.da, a.path, f);
+});
+return [];
+},
+ae: function (a, b) {
+c.ba.Rf(a, b);
+}
+});
+}
+g = Yh.prototype;
+g.toString = function () {
+return (this.F.kb ? 'https://' : 'http://') + this.F.host;
+};
+g.name = function () {
+return this.F.hc;
+};
+function $h(a) {
+a = a.Ce.j(new L('.info/serverTimeOffset')).I() || 0;
+return new Date().getTime() + a;
+}
+function ai(a) {
+a = a = { timestamp: $h(a) };
+a.timestamp = a.timestamp || new Date().getTime();
+return a;
+}
+g.Gb = function (a, b, c, d) {
+this.sd++;
+var e = new L(a);
+b = this.De ? this.De(a, b) : b;
+a = [];
+d ? c ? (b = na(b, function (a) {
+return M(a);
+}), a = Ff(this.L, e, b, d)) : (b = M(b), a = Bf(this.L, e, b, d)) : c ? (d = na(b, function (a) {
+return M(a);
+}), a = Af(this.L, e, d)) : (d = M(b), a = xf(this.L, new Xb(bf, e, d)));
+d = e;
+0 &lt; a.length &amp;&amp; (d = bi(this, e));
+Ab(this.da, d, a);
+};
+g.Uc = function (a) {
+Zh(this, 'connected', a);
+!1 === a &amp;&amp; ci(this);
+};
+g.Oe = function (a) {
+var b = this;
+Wc(a, function (a, d) {
+Zh(b, d, a);
+});
+};
+g.Le = function (a) {
+Zh(this, 'authenticated', a);
+};
+function Zh(a, b, c) {
+b = new L('/.info/' + b);
+c = M(c);
+var d = a.Ce;
+d.Wd = d.Wd.G(b, c);
+c = xf(a.Cd, new Xb(bf, b, c));
+Ab(a.da, b, c);
+}
+g.Kb = function (a, b, c, d) {
+this.f('set', {
+path: a.toString(),
+value: b,
+$g: c
+});
+var e = ai(this);
+b = M(b, c);
+var e = sc(b, e), f = this.Hd++, e = wf(this.L, a, e, f, !0);
+wb(this.da, e);
+var h = this;
+this.ba.put(a.toString(), b.I(!0), function (b, c) {
+var e = 'ok' === b;
+e || O('set at ' + a + ' failed: ' + b);
+e = zf(h.L, f, !e);
+Ab(h.da, a, e);
+di(d, b, c);
+});
+e = ei(this, a);
+bi(this, e);
+Ab(this.da, e, []);
+};
+g.update = function (a, b, c) {
+this.f('update', {
+path: a.toString(),
+value: b
+});
+var d = !0, e = ai(this), f = {};
+r(b, function (a, b) {
+d = !1;
+var c = M(a);
+f[b] = sc(c, e);
+});
+if (d)
+Cb('update() called with empty data.  Don\'t do anything.'), di(c, 'ok');
+else {
+var h = this.Hd++, k = yf(this.L, a, f, h);
+wb(this.da, k);
+var l = this;
+this.ba.zf(a.toString(), b, function (b, d) {
+var e = 'ok' === b;
+e || O('update at ' + a + ' failed: ' + b);
+var e = zf(l.L, h, !e), f = a;
+0 &lt; e.length &amp;&amp; (f = bi(l, a));
+Ab(l.da, f, e);
+di(c, b, d);
+});
+b = ei(this, a);
+bi(this, b);
+Ab(this.da, a, []);
+}
+};
+function ci(a) {
+a.f('onDisconnectEvents');
+var b = ai(a), c = [];
+rc(pc(a.la, b), G, function (b, e) {
+c = c.concat(xf(a.L, new Xb(bf, b, e)));
+var f = ei(a, b);
+bi(a, f);
+});
+a.la = new qc();
+Ab(a.da, G, c);
+}
+g.Jd = function (a, b) {
+var c = this;
+this.ba.Jd(a.toString(), function (d, e) {
+'ok' === d &amp;&amp; rg(c.la, a);
+di(b, d, e);
+});
+};
+function fi(a, b, c, d) {
+var e = M(c);
+a.ba.Me(b.toString(), e.I(!0), function (c, h) {
+'ok' === c &amp;&amp; a.la.nc(b, e);
+di(d, c, h);
+});
+}
+function gi(a, b, c, d, e) {
+var f = M(c, d);
+a.ba.Me(b.toString(), f.I(!0), function (c, d) {
+'ok' === c &amp;&amp; a.la.nc(b, f);
+di(e, c, d);
+});
+}
+function hi(a, b, c, d) {
+var e = !0, f;
+for (f in c)
+e = !1;
+e ? (Cb('onDisconnect().update() called with empty data.  Don\'t do anything.'), di(d, 'ok')) : a.ba.Cf(b.toString(), c, function (e, f) {
+if ('ok' === e)
+for (var l in c) {
+var m = M(c[l]);
+a.la.nc(b.u(l), m);
+}
+di(d, e, f);
+});
+}
+function ii(a, b, c) {
+c = '.info' === E(b.path) ? a.Cd.Pb(b, c) : a.L.Pb(b, c);
+yb(a.da, b.path, c);
+}
+g.yb = function () {
+this.Ra &amp;&amp; this.Ra.yb();
+};
+g.rc = function () {
+this.Ra &amp;&amp; this.Ra.rc();
+};
+g.Ye = function (a) {
+if ('undefined' !== typeof console) {
+a ? (this.fd || (this.fd = new Lb(this.Ua)), a = this.fd.get()) : a = this.Ua.get();
+var b = Ra(sa(a), function (a, b) {
+return Math.max(b.length, a);
+}, 0), c;
+for (c in a) {
+for (var d = a[c], e = c.length; e &lt; b + 2; e++)
+c += ' ';
+console.log(c + d);
+}
+}
+};
+g.Ze = function (a) {
+Ob(this.Ua, a);
+this.Sg.Of[a] = !0;
+};
+g.f = function (a) {
+var b = '';
+this.Ra &amp;&amp; (b = this.Ra.id + ':');
+Cb(b, arguments);
+};
+function di(a, b, c) {
+a &amp;&amp; Db(function () {
+if ('ok' == b)
+a(null);
+else {
+var d = (b || 'error').toUpperCase(), e = d;
+c &amp;&amp; (e += ': ' + c);
+e = Error(e);
+e.code = d;
+a(e);
+}
+});
+}
+;
+function ji(a, b, c, d, e) {
+function f() {
+}
+a.f('transaction on ' + b);
+var h = new U(a, b);
+h.Eb('value', f);
+c = {
+path: b,
+update: c,
+H: d,
+status: null,
+Ff: Ec(),
+cf: e,
+Lf: 0,
+ie: function () {
+h.ic('value', f);
+},
+ke: null,
+Ba: null,
+pd: null,
+qd: null,
+rd: null
+};
+d = a.L.za(b, void 0) || C;
+c.pd = d;
+d = c.update(d.I());
+if (n(d)) {
+cg('transaction failed: Data returned ', d, c.path);
+c.status = 1;
+e = Sf(a.uc, b);
+var k = e.Ca() || [];
+k.push(c);
+Tf(e, k);
+'object' === typeof d &amp;&amp; null !== d &amp;&amp; v(d, '.priority') ? (k = w(d, '.priority'), K(ag(k), 'Invalid priority returned by transaction. Priority must be a valid string, finite number, server value, or null.')) : k = (a.L.za(b) || C).C().I();
+e = ai(a);
+d = M(d, k);
+e = sc(d, e);
+c.qd = d;
+c.rd = e;
+c.Ba = a.Hd++;
+c = wf(a.L, b, e, c.Ba, c.cf);
+Ab(a.da, b, c);
+ki(a);
+} else
+c.ie(), c.qd = null, c.rd = null, c.H &amp;&amp; (a = new Q(c.pd, new U(a, c.path), N), c.H(null, !1, a));
+}
+function ki(a, b) {
+var c = b || a.uc;
+b || li(a, c);
+if (null !== c.Ca()) {
+var d = mi(a, c);
+K(0 &lt; d.length, 'Sending zero length transaction queue');
+Sa(d, function (a) {
+return 1 === a.status;
+}) &amp;&amp; ni(a, c.path(), d);
+} else
+c.wd() &amp;&amp; c.P(function (b) {
+ki(a, b);
+});
+}
+function ni(a, b, c) {
+for (var d = Qa(c, function (a) {
+return a.Ba;
+}), e = a.L.za(b, d) || C, d = e, e = e.hash(), f = 0; f &lt; c.length; f++) {
+var h = c[f];
+K(1 === h.status, 'tryToSendTransactionQueue_: items in queue should all be run.');
+h.status = 2;
+h.Lf++;
+var k = T(b, h.path), d = d.G(k, h.qd);
+}
+d = d.I(!0);
+a.ba.put(b.toString(), d, function (d) {
+a.f('transaction put response', {
+path: b.toString(),
+status: d
+});
+var e = [];
+if ('ok' === d) {
+d = [];
+for (f = 0; f &lt; c.length; f++) {
+c[f].status = 3;
+e = e.concat(zf(a.L, c[f].Ba));
+if (c[f].H) {
+var h = c[f].rd, k = new U(a, c[f].path);
+d.push(q(c[f].H, null, null, !0, new Q(h, k, N)));
+}
+c[f].ie();
+}
+li(a, Sf(a.uc, b));
+ki(a);
+Ab(a.da, b, e);
+for (f = 0; f &lt; d.length; f++)
+Db(d[f]);
+} else {
+if ('datastale' === d)
+for (f = 0; f &lt; c.length; f++)
+c[f].status = 4 === c[f].status ? 5 : 1;
+else
+for (O('transaction at ' + b.toString() + ' failed: ' + d), f = 0; f &lt; c.length; f++)
+c[f].status = 5, c[f].ke = d;
+bi(a, b);
+}
+}, e);
+}
+function bi(a, b) {
+var c = oi(a, b), d = c.path(), c = mi(a, c);
+pi(a, c, d);
+return d;
+}
+function pi(a, b, c) {
+if (0 !== b.length) {
+for (var d = [], e = [], f = Qa(b, function (a) {
+return a.Ba;
+}), h = 0; h &lt; b.length; h++) {
+var k = b[h], l = T(c, k.path), m = !1, t;
+K(null !== l, 'rerunTransactionsUnderNode_: relativePath should not be null.');
+if (5 === k.status)
+m = !0, t = k.ke, e = e.concat(zf(a.L, k.Ba, !0));
+else if (1 === k.status)
+if (25 &lt;= k.Lf)
+m = !0, t = 'maxretry', e = e.concat(zf(a.L, k.Ba, !0));
+else {
+var z = a.L.za(k.path, f) || C;
+k.pd = z;
+var I = b[h].update(z.I());
+n(I) ? (cg('transaction failed: Data returned ', I, k.path), l = M(I), 'object' === typeof I &amp;&amp; null != I &amp;&amp; v(I, '.priority') || (l = l.ga(z.C())), z = k.Ba, I = ai(a), I = sc(l, I), k.qd = l, k.rd = I, k.Ba = a.Hd++, Va(f, z), e = e.concat(wf(a.L, k.path, I, k.Ba, k.cf)), e = e.concat(zf(a.L, z, !0))) : (m = !0, t = 'nodata', e = e.concat(zf(a.L, k.Ba, !0)));
+}
+Ab(a.da, c, e);
+e = [];
+m &amp;&amp; (b[h].status = 3, setTimeout(b[h].ie, Math.floor(0)), b[h].H &amp;&amp; ('nodata' === t ? (k = new U(a, b[h].path), d.push(q(b[h].H, null, null, !1, new Q(b[h].pd, k, N)))) : d.push(q(b[h].H, null, Error(t), !1, null))));
+}
+li(a, a.uc);
+for (h = 0; h &lt; d.length; h++)
+Db(d[h]);
+ki(a);
+}
+}
+function oi(a, b) {
+for (var c, d = a.uc; null !== (c = E(b)) &amp;&amp; null === d.Ca();)
+d = Sf(d, c), b = H(b);
+return d;
+}
+function mi(a, b) {
+var c = [];
+qi(a, b, c);
+c.sort(function (a, b) {
+return a.Ff - b.Ff;
+});
+return c;
+}
+function qi(a, b, c) {
+var d = b.Ca();
+if (null !== d)
+for (var e = 0; e &lt; d.length; e++)
+c.push(d[e]);
+b.P(function (b) {
+qi(a, b, c);
+});
+}
+function li(a, b) {
+var c = b.Ca();
+if (c) {
+for (var d = 0, e = 0; e &lt; c.length; e++)
+3 !== c[e].status &amp;&amp; (c[d] = c[e], d++);
+c.length = d;
+Tf(b, 0 &lt; c.length ? c : null);
+}
+b.P(function (b) {
+li(a, b);
+});
+}
+function ei(a, b) {
+var c = oi(a, b).path(), d = Sf(a.uc, b);
+Wf(d, function (b) {
+ri(a, b);
+});
+ri(a, d);
+Vf(d, function (b) {
+ri(a, b);
+});
+return c;
+}
+function ri(a, b) {
+var c = b.Ca();
+if (null !== c) {
+for (var d = [], e = [], f = -1, h = 0; h &lt; c.length; h++)
+4 !== c[h].status &amp;&amp; (2 === c[h].status ? (K(f === h - 1, 'All SENT items should be at beginning of queue.'), f = h, c[h].status = 4, c[h].ke = 'set') : (K(1 === c[h].status, 'Unexpected transaction status in abort'), c[h].ie(), e = e.concat(zf(a.L, c[h].Ba, !0)), c[h].H &amp;&amp; d.push(q(c[h].H, null, Error('set'), !1, null))));
+-1 === f ? Tf(b, null) : c.length = f + 1;
+Ab(a.da, b.path(), e);
+for (h = 0; h &lt; d.length; h++)
+Db(d[h]);
+}
+}
+;
+function W() {
+this.oc = {};
+this.Sf = !1;
+}
+W.prototype.yb = function () {
+for (var a in this.oc)
+this.oc[a].yb();
+};
+W.prototype.rc = function () {
+for (var a in this.oc)
+this.oc[a].rc();
+};
+W.prototype.ve = function () {
+this.Sf = !0;
+};
+ca(W);
+W.prototype.interrupt = W.prototype.yb;
+W.prototype.resume = W.prototype.rc;
+function X(a, b) {
+this.bd = a;
+this.ra = b;
+}
+X.prototype.cancel = function (a) {
+x('Firebase.onDisconnect().cancel', 0, 1, arguments.length);
+A('Firebase.onDisconnect().cancel', 1, a, !0);
+this.bd.Jd(this.ra, a || null);
+};
+X.prototype.cancel = X.prototype.cancel;
+X.prototype.remove = function (a) {
+x('Firebase.onDisconnect().remove', 0, 1, arguments.length);
+jg('Firebase.onDisconnect().remove', this.ra);
+A('Firebase.onDisconnect().remove', 1, a, !0);
+fi(this.bd, this.ra, null, a);
+};
+X.prototype.remove = X.prototype.remove;
+X.prototype.set = function (a, b) {
+x('Firebase.onDisconnect().set', 1, 2, arguments.length);
+jg('Firebase.onDisconnect().set', this.ra);
+bg('Firebase.onDisconnect().set', a, this.ra, !1);
+A('Firebase.onDisconnect().set', 2, b, !0);
+fi(this.bd, this.ra, a, b);
+};
+X.prototype.set = X.prototype.set;
+X.prototype.Kb = function (a, b, c) {
+x('Firebase.onDisconnect().setWithPriority', 2, 3, arguments.length);
+jg('Firebase.onDisconnect().setWithPriority', this.ra);
+bg('Firebase.onDisconnect().setWithPriority', a, this.ra, !1);
+fg('Firebase.onDisconnect().setWithPriority', 2, b);
+A('Firebase.onDisconnect().setWithPriority', 3, c, !0);
+gi(this.bd, this.ra, a, b, c);
+};
+X.prototype.setWithPriority = X.prototype.Kb;
+X.prototype.update = function (a, b) {
+x('Firebase.onDisconnect().update', 1, 2, arguments.length);
+jg('Firebase.onDisconnect().update', this.ra);
+if (ea(a)) {
+for (var c = {}, d = 0; d &lt; a.length; ++d)
+c['' + d] = a[d];
+a = c;
+O('Passing an Array to Firebase.onDisconnect().update() is deprecated. Use set() if you want to overwrite the existing data, or an Object with integer keys if you really do want to only update some of the children.');
+}
+eg('Firebase.onDisconnect().update', a, this.ra);
+A('Firebase.onDisconnect().update', 2, b, !0);
+hi(this.bd, this.ra, a, b);
+};
+X.prototype.update = X.prototype.update;
+function Y(a, b, c, d) {
+this.k = a;
+this.path = b;
+this.n = c;
+this.lc = d;
+}
+function si(a) {
+var b = null, c = null;
+a.ma &amp;&amp; (b = nd(a));
+a.pa &amp;&amp; (c = pd(a));
+if (a.g === Qd) {
+if (a.ma) {
+if ('[MIN_NAME]' != md(a))
+throw Error('Query: When ordering by key, you may only pass one argument to startAt(), endAt(), or equalTo().');
+if ('string' !== typeof b)
+throw Error('Query: When ordering by key, the argument passed to startAt(), endAt(),or equalTo() must be a string.');
+}
+if (a.pa) {
+if ('[MAX_NAME]' != od(a))
+throw Error('Query: When ordering by key, you may only pass one argument to startAt(), endAt(), or equalTo().');
+if ('string' !== typeof c)
+throw Error('Query: When ordering by key, the argument passed to startAt(), endAt(),or equalTo() must be a string.');
+}
+} else if (a.g === N) {
+if (null != b &amp;&amp; !ag(b) || null != c &amp;&amp; !ag(c))
+throw Error('Query: When ordering by priority, the first argument passed to startAt(), endAt(), or equalTo() must be a valid priority value (null, a number, or a string).');
+} else if (K(a.g instanceof Ud || a.g === $d, 'unknown index type.'), null != b &amp;&amp; 'object' === typeof b || null != c &amp;&amp; 'object' === typeof c)
+throw Error('Query: First argument passed to startAt(), endAt(), or equalTo() cannot be an object.');
+}
+function ti(a) {
+if (a.ma &amp;&amp; a.pa &amp;&amp; a.ja &amp;&amp; (!a.ja || '' === a.Nb))
+throw Error('Query: Can\'t combine startAt(), endAt(), and limit(). Use limitToFirst() or limitToLast() instead.');
+}
+function ui(a, b) {
+if (!0 === a.lc)
+throw Error(b + ': You can\'t combine multiple orderBy calls.');
+}
+g = Y.prototype;
+g.Ib = function () {
+x('Query.ref', 0, 0, arguments.length);
+return new U(this.k, this.path);
+};
+g.Eb = function (a, b, c, d) {
+x('Query.on', 2, 4, arguments.length);
+gg('Query.on', a, !1);
+A('Query.on', 2, b, !1);
+var e = vi('Query.on', c, d);
+if ('value' === a)
+ii(this.k, this, new id(b, e.cancel || null, e.Ma || null));
+else {
+var f = {};
+f[a] = b;
+ii(this.k, this, new jd(f, e.cancel, e.Ma));
+}
+return b;
+};
+g.ic = function (a, b, c) {
+x('Query.off', 0, 3, arguments.length);
+gg('Query.off', a, !0);
+A('Query.off', 2, b, !0);
+mb('Query.off', 3, c);
+var d = null, e = null;
+'value' === a ? d = new id(b || null, null, c || null) : a &amp;&amp; (b &amp;&amp; (e = {}, e[a] = b), d = new jd(e, null, c || null));
+e = this.k;
+d = '.info' === E(this.path) ? e.Cd.jb(this, d) : e.L.jb(this, d);
+yb(e.da, this.path, d);
+};
+g.Dg = function (a, b) {
+function c(h) {
+f &amp;&amp; (f = !1, e.ic(a, c), b.call(d.Ma, h));
+}
+x('Query.once', 2, 4, arguments.length);
+gg('Query.once', a, !1);
+A('Query.once', 2, b, !1);
+var d = vi('Query.once', arguments[2], arguments[3]), e = this, f = !0;
+this.Eb(a, c, function (b) {
+e.ic(a, c);
+d.cancel &amp;&amp; d.cancel.call(d.Ma, b);
+});
+};
+g.He = function (a) {
+O('Query.limit() being deprecated. Please use Query.limitToFirst() or Query.limitToLast() instead.');
+x('Query.limit', 1, 1, arguments.length);
+if (!ga(a) || Math.floor(a) !== a || 0 &gt;= a)
+throw Error('Query.limit: First argument must be a positive integer.');
+if (this.n.ja)
+throw Error('Query.limit: Limit was already set (by another call to limit, limitToFirst, orlimitToLast.');
+var b = this.n.He(a);
+ti(b);
+return new Y(this.k, this.path, b, this.lc);
+};
+g.Ie = function (a) {
+x('Query.limitToFirst', 1, 1, arguments.length);
+if (!ga(a) || Math.floor(a) !== a || 0 &gt;= a)
+throw Error('Query.limitToFirst: First argument must be a positive integer.');
+if (this.n.ja)
+throw Error('Query.limitToFirst: Limit was already set (by another call to limit, limitToFirst, or limitToLast).');
+return new Y(this.k, this.path, this.n.Ie(a), this.lc);
+};
+g.Je = function (a) {
+x('Query.limitToLast', 1, 1, arguments.length);
+if (!ga(a) || Math.floor(a) !== a || 0 &gt;= a)
+throw Error('Query.limitToLast: First argument must be a positive integer.');
+if (this.n.ja)
+throw Error('Query.limitToLast: Limit was already set (by another call to limit, limitToFirst, or limitToLast).');
+return new Y(this.k, this.path, this.n.Je(a), this.lc);
+};
+g.Eg = function (a) {
+x('Query.orderByChild', 1, 1, arguments.length);
+if ('$key' === a)
+throw Error('Query.orderByChild: "$key" is invalid.  Use Query.orderByKey() instead.');
+if ('$priority' === a)
+throw Error('Query.orderByChild: "$priority" is invalid.  Use Query.orderByPriority() instead.');
+if ('$value' === a)
+throw Error('Query.orderByChild: "$value" is invalid.  Use Query.orderByValue() instead.');
+ig('Query.orderByChild', a);
+ui(this, 'Query.orderByChild');
+var b = new L(a);
+if (b.e())
+throw Error('Query.orderByChild: cannot pass in empty path.  Use Query.orderByValue() instead.');
+b = new Ud(b);
+b = de(this.n, b);
+si(b);
+return new Y(this.k, this.path, b, !0);
+};
+g.Fg = function () {
+x('Query.orderByKey', 0, 0, arguments.length);
+ui(this, 'Query.orderByKey');
+var a = de(this.n, Qd);
+si(a);
+return new Y(this.k, this.path, a, !0);
+};
+g.Gg = function () {
+x('Query.orderByPriority', 0, 0, arguments.length);
+ui(this, 'Query.orderByPriority');
+var a = de(this.n, N);
+si(a);
+return new Y(this.k, this.path, a, !0);
+};
+g.Hg = function () {
+x('Query.orderByValue', 0, 0, arguments.length);
+ui(this, 'Query.orderByValue');
+var a = de(this.n, $d);
+si(a);
+return new Y(this.k, this.path, a, !0);
+};
+g.$d = function (a, b) {
+x('Query.startAt', 0, 2, arguments.length);
+bg('Query.startAt', a, this.path, !0);
+hg('Query.startAt', b);
+var c = this.n.$d(a, b);
+ti(c);
+si(c);
+if (this.n.ma)
+throw Error('Query.startAt: Starting point was already set (by another call to startAt or equalTo).');
+n(a) || (b = a = null);
+return new Y(this.k, this.path, c, this.lc);
+};
+g.td = function (a, b) {
+x('Query.endAt', 0, 2, arguments.length);
+bg('Query.endAt', a, this.path, !0);
+hg('Query.endAt', b);
+var c = this.n.td(a, b);
+ti(c);
+si(c);
+if (this.n.pa)
+throw Error('Query.endAt: Ending point was already set (by another call to endAt or equalTo).');
+return new Y(this.k, this.path, c, this.lc);
+};
+g.kg = function (a, b) {
+x('Query.equalTo', 1, 2, arguments.length);
+bg('Query.equalTo', a, this.path, !1);
+hg('Query.equalTo', b);
+if (this.n.ma)
+throw Error('Query.equalTo: Starting point was already set (by another call to endAt or equalTo).');
+if (this.n.pa)
+throw Error('Query.equalTo: Ending point was already set (by another call to endAt or equalTo).');
+return this.$d(a, b).td(a, b);
+};
+g.toString = function () {
+x('Query.toString', 0, 0, arguments.length);
+for (var a = this.path, b = '', c = a.Z; c &lt; a.o.length; c++)
+'' !== a.o[c] &amp;&amp; (b += '/' + encodeURIComponent(String(a.o[c])));
+return this.k.toString() + (b || '/');
+};
+g.va = function () {
+var a = Uc(ee(this.n));
+return '{}' === a ? 'default' : a;
+};
+function vi(a, b, c) {
+var d = {
+cancel: null,
+Ma: null
+};
+if (b &amp;&amp; c)
+d.cancel = b, A(a, 3, d.cancel, !0), d.Ma = c, mb(a, 4, d.Ma);
+else if (b)
+if ('object' === typeof b &amp;&amp; null !== b)
+d.Ma = b;
+else if ('function' === typeof b)
+d.cancel = b;
+else
+throw Error(y(a, 3, !0) + ' must either be a cancel callback or a context object.');
+return d;
+}
+Y.prototype.ref = Y.prototype.Ib;
+Y.prototype.on = Y.prototype.Eb;
+Y.prototype.off = Y.prototype.ic;
+Y.prototype.once = Y.prototype.Dg;
+Y.prototype.limit = Y.prototype.He;
+Y.prototype.limitToFirst = Y.prototype.Ie;
+Y.prototype.limitToLast = Y.prototype.Je;
+Y.prototype.orderByChild = Y.prototype.Eg;
+Y.prototype.orderByKey = Y.prototype.Fg;
+Y.prototype.orderByPriority = Y.prototype.Gg;
+Y.prototype.orderByValue = Y.prototype.Hg;
+Y.prototype.startAt = Y.prototype.$d;
+Y.prototype.endAt = Y.prototype.td;
+Y.prototype.equalTo = Y.prototype.kg;
+Y.prototype.toString = Y.prototype.toString;
+var Z = {};
+Z.vc = Kh;
+Z.DataConnection = Z.vc;
+Kh.prototype.Rg = function (a, b) {
+this.Fa('q', { p: a }, b);
+};
+Z.vc.prototype.simpleListen = Z.vc.prototype.Rg;
+Kh.prototype.jg = function (a, b) {
+this.Fa('echo', { d: a }, b);
+};
+Z.vc.prototype.echo = Z.vc.prototype.jg;
+Kh.prototype.interrupt = Kh.prototype.yb;
+Z.Vf = yh;
+Z.RealTimeConnection = Z.Vf;
+yh.prototype.sendRequest = yh.prototype.Fa;
+yh.prototype.close = yh.prototype.close;
+Z.rg = function (a) {
+var b = Kh.prototype.put;
+Kh.prototype.put = function (c, d, e, f) {
+n(f) &amp;&amp; (f = a());
+b.call(this, c, d, e, f);
+};
+return function () {
+Kh.prototype.put = b;
+};
+};
+Z.hijackHash = Z.rg;
+Z.Uf = zc;
+Z.ConnectionTarget = Z.Uf;
+Z.va = function (a) {
+return a.va();
+};
+Z.queryIdentifier = Z.va;
+Z.tg = function (a) {
+return a.k.Ra.$;
+};
+Z.listens = Z.tg;
+Z.ve = function (a) {
+a.ve();
+};
+Z.forceRestClient = Z.ve;
+function U(a, b) {
+var c, d, e;
+if (a instanceof Yh)
+c = a, d = b;
+else {
+x('new Firebase', 1, 2, arguments.length);
+d = Pc(arguments[0]);
+c = d.Tg;
+'firebase' === d.domain &amp;&amp; Oc(d.host + ' is no longer supported. Please use <your firebase="">.firebaseio.com instead');
+c &amp;&amp; 'undefined' != c || Oc('Cannot parse Firebase url. Please use https://<your firebase="">.firebaseio.com');
+d.kb || 'undefined' !== typeof window &amp;&amp; window.location &amp;&amp; window.location.protocol &amp;&amp; -1 !== window.location.protocol.indexOf('https:') &amp;&amp; O('Insecure Firebase access from a secure page. Please use https in calls to new Firebase().');
+c = new zc(d.host, d.kb, c, 'ws' === d.scheme || 'wss' === d.scheme);
+d = new L(d.$c);
+e = d.toString();
+var f;
+!(f = !p(c.host) || 0 === c.host.length || !$f(c.hc)) &amp;&amp; (f = 0 !== e.length) &amp;&amp; (e &amp;&amp; (e = e.replace(/^\/*\.info(\/|$)/, '/')), f = !(p(e) &amp;&amp; 0 !== e.length &amp;&amp; !Yf.test(e)));
+if (f)
+throw Error(y('new Firebase', 1, !1) + 'must be a valid firebase URL and the path can\'t contain ".", "#", "$", "[", or "]".');
+if (b)
+if (b instanceof W)
+e = b;
+else if (p(b))
+e = W.ub(), c.Od = b;
+else
+throw Error('Expected a valid Firebase.Context for second argument to new Firebase()');
+else
+e = W.ub();
+f = c.toString();
+var h = w(e.oc, f);
+h || (h = new Yh(c, e.Sf), e.oc[f] = h);
+c = h;
+}
+Y.call(this, c, d, be, !1);
+}
+ma(U, Y);
+var wi = U, xi = ['Firebase'], yi = aa;
+xi[0] in yi || !yi.execScript || yi.execScript('var ' + xi[0]);
+for (var zi; xi.length &amp;&amp; (zi = xi.shift());)
+!xi.length &amp;&amp; n(wi) ? yi[zi] = wi : yi = yi[zi] ? yi[zi] : yi[zi] = {};
+U.goOffline = function () {
+x('Firebase.goOffline', 0, 0, arguments.length);
+W.ub().yb();
+};
+U.goOnline = function () {
+x('Firebase.goOnline', 0, 0, arguments.length);
+W.ub().rc();
+};
+function Lc(a, b) {
+K(!b || !0 === a || !1 === a, 'Can\'t turn on custom loggers persistently.');
+!0 === a ? ('undefined' !== typeof console &amp;&amp; ('function' === typeof console.log ? Bb = q(console.log, console) : 'object' === typeof console.log &amp;&amp; (Bb = function (a) {
+console.log(a);
+})), b &amp;&amp; yc.set('logging_enabled', !0)) : a ? Bb = a : (Bb = null, yc.remove('logging_enabled'));
+}
+U.enableLogging = Lc;
+U.ServerValue = { TIMESTAMP: { '.sv': 'timestamp' } };
+U.SDK_VERSION = hb;
+U.INTERNAL = V;
+U.Context = W;
+U.TEST_ACCESS = Z;
+U.prototype.name = function () {
+O('Firebase.name() being deprecated. Please use Firebase.key() instead.');
+x('Firebase.name', 0, 0, arguments.length);
+return this.key();
+};
+U.prototype.name = U.prototype.name;
+U.prototype.key = function () {
+x('Firebase.key', 0, 0, arguments.length);
+return this.path.e() ? null : Ld(this.path);
+};
+U.prototype.key = U.prototype.key;
+U.prototype.u = function (a) {
+x('Firebase.child', 1, 1, arguments.length);
+if (ga(a))
+a = String(a);
+else if (!(a instanceof L))
+if (null === E(this.path)) {
+var b = a;
+b &amp;&amp; (b = b.replace(/^\/*\.info(\/|$)/, '/'));
+ig('Firebase.child', b);
+} else
+ig('Firebase.child', a);
+return new U(this.k, this.path.u(a));
+};
+U.prototype.child = U.prototype.u;
+U.prototype.parent = function () {
+x('Firebase.parent', 0, 0, arguments.length);
+var a = this.path.parent();
+return null === a ? null : new U(this.k, a);
+};
+U.prototype.parent = U.prototype.parent;
+U.prototype.root = function () {
+x('Firebase.ref', 0, 0, arguments.length);
+for (var a = this; null !== a.parent();)
+a = a.parent();
+return a;
+};
+U.prototype.root = U.prototype.root;
+U.prototype.set = function (a, b) {
+x('Firebase.set', 1, 2, arguments.length);
+jg('Firebase.set', this.path);
+bg('Firebase.set', a, this.path, !1);
+A('Firebase.set', 2, b, !0);
+this.k.Kb(this.path, a, null, b || null);
+};
+U.prototype.set = U.prototype.set;
+U.prototype.update = function (a, b) {
+x('Firebase.update', 1, 2, arguments.length);
+jg('Firebase.update', this.path);
+if (ea(a)) {
+for (var c = {}, d = 0; d &lt; a.length; ++d)
+c['' + d] = a[d];
+a = c;
+O('Passing an Array to Firebase.update() is deprecated. Use set() if you want to overwrite the existing data, or an Object with integer keys if you really do want to only update some of the children.');
+}
+eg('Firebase.update', a, this.path);
+A('Firebase.update', 2, b, !0);
+this.k.update(this.path, a, b || null);
+};
+U.prototype.update = U.prototype.update;
+U.prototype.Kb = function (a, b, c) {
+x('Firebase.setWithPriority', 2, 3, arguments.length);
+jg('Firebase.setWithPriority', this.path);
+bg('Firebase.setWithPriority', a, this.path, !1);
+fg('Firebase.setWithPriority', 2, b);
+A('Firebase.setWithPriority', 3, c, !0);
+if ('.length' === this.key() || '.keys' === this.key())
+throw 'Firebase.setWithPriority failed: ' + this.key() + ' is a read-only object.';
+this.k.Kb(this.path, a, b, c || null);
+};
+U.prototype.setWithPriority = U.prototype.Kb;
+U.prototype.remove = function (a) {
+x('Firebase.remove', 0, 1, arguments.length);
+jg('Firebase.remove', this.path);
+A('Firebase.remove', 1, a, !0);
+this.set(null, a);
+};
+U.prototype.remove = U.prototype.remove;
+U.prototype.transaction = function (a, b, c) {
+x('Firebase.transaction', 1, 3, arguments.length);
+jg('Firebase.transaction', this.path);
+A('Firebase.transaction', 1, a, !1);
+A('Firebase.transaction', 2, b, !0);
+if (n(c) &amp;&amp; 'boolean' != typeof c)
+throw Error(y('Firebase.transaction', 3, !0) + 'must be a boolean.');
+if ('.length' === this.key() || '.keys' === this.key())
+throw 'Firebase.transaction failed: ' + this.key() + ' is a read-only object.';
+'undefined' === typeof c &amp;&amp; (c = !0);
+ji(this.k, this.path, a, b || null, c);
+};
+U.prototype.transaction = U.prototype.transaction;
+U.prototype.Og = function (a, b) {
+x('Firebase.setPriority', 1, 2, arguments.length);
+jg('Firebase.setPriority', this.path);
+fg('Firebase.setPriority', 1, a);
+A('Firebase.setPriority', 2, b, !0);
+this.k.Kb(this.path.u('.priority'), a, null, b);
+};
+U.prototype.setPriority = U.prototype.Og;
+U.prototype.push = function (a, b) {
+x('Firebase.push', 0, 2, arguments.length);
+jg('Firebase.push', this.path);
+bg('Firebase.push', a, this.path, !0);
+A('Firebase.push', 2, b, !0);
+var c = $h(this.k), c = Fe(c), c = this.u(c);
+'undefined' !== typeof a &amp;&amp; null !== a &amp;&amp; c.set(a, b);
+return c;
+};
+U.prototype.push = U.prototype.push;
+U.prototype.hb = function () {
+jg('Firebase.onDisconnect', this.path);
+return new X(this.k, this.path);
+};
+U.prototype.onDisconnect = U.prototype.hb;
+U.prototype.M = function (a, b, c) {
+O('FirebaseRef.auth() being deprecated. Please use FirebaseRef.authWithCustomToken() instead.');
+x('Firebase.auth', 1, 3, arguments.length);
+kg('Firebase.auth', a);
+A('Firebase.auth', 2, b, !0);
+A('Firebase.auth', 3, b, !0);
+Yg(this.k.M, a, {}, { remember: 'none' }, b, c);
+};
+U.prototype.auth = U.prototype.M;
+U.prototype.ge = function (a) {
+x('Firebase.unauth', 0, 1, arguments.length);
+A('Firebase.unauth', 1, a, !0);
+Zg(this.k.M, a);
+};
+U.prototype.unauth = U.prototype.ge;
+U.prototype.xe = function () {
+x('Firebase.getAuth', 0, 0, arguments.length);
+return this.k.M.xe();
+};
+U.prototype.getAuth = U.prototype.xe;
+U.prototype.xg = function (a, b) {
+x('Firebase.onAuth', 1, 2, arguments.length);
+A('Firebase.onAuth', 1, a, !1);
+mb('Firebase.onAuth', 2, b);
+this.k.M.Eb('auth_status', a, b);
+};
+U.prototype.onAuth = U.prototype.xg;
+U.prototype.wg = function (a, b) {
+x('Firebase.offAuth', 1, 2, arguments.length);
+A('Firebase.offAuth', 1, a, !1);
+mb('Firebase.offAuth', 2, b);
+this.k.M.ic('auth_status', a, b);
+};
+U.prototype.offAuth = U.prototype.wg;
+U.prototype.Zf = function (a, b, c) {
+x('Firebase.authWithCustomToken', 2, 3, arguments.length);
+kg('Firebase.authWithCustomToken', a);
+A('Firebase.authWithCustomToken', 2, b, !1);
+ng('Firebase.authWithCustomToken', 3, c, !0);
+Yg(this.k.M, a, {}, c || {}, b);
+};
+U.prototype.authWithCustomToken = U.prototype.Zf;
+U.prototype.$f = function (a, b, c) {
+x('Firebase.authWithOAuthPopup', 2, 3, arguments.length);
+mg('Firebase.authWithOAuthPopup', a);
+A('Firebase.authWithOAuthPopup', 2, b, !1);
+ng('Firebase.authWithOAuthPopup', 3, c, !0);
+ch(this.k.M, a, c, b);
+};
+U.prototype.authWithOAuthPopup = U.prototype.$f;
+U.prototype.ag = function (a, b, c) {
+x('Firebase.authWithOAuthRedirect', 2, 3, arguments.length);
+mg('Firebase.authWithOAuthRedirect', a);
+A('Firebase.authWithOAuthRedirect', 2, b, !1);
+ng('Firebase.authWithOAuthRedirect', 3, c, !0);
+var d = this.k.M;
+ah(d);
+var e = [Kg], f = vg(c);
+'anonymous' === a || 'firebase' === a ? P(b, Mg('TRANSPORT_UNAVAILABLE')) : (yc.set('redirect_client_options', f.od), bh(d, e, '/auth/' + a, f, b));
+};
+U.prototype.authWithOAuthRedirect = U.prototype.ag;
+U.prototype.bg = function (a, b, c, d) {
+x('Firebase.authWithOAuthToken', 3, 4, arguments.length);
+mg('Firebase.authWithOAuthToken', a);
+A('Firebase.authWithOAuthToken', 3, c, !1);
+ng('Firebase.authWithOAuthToken', 4, d, !0);
+p(b) ? (lg('Firebase.authWithOAuthToken', 2, b), $g(this.k.M, a + '/token', { access_token: b }, d, c)) : (ng('Firebase.authWithOAuthToken', 2, b, !1), $g(this.k.M, a + '/token', b, d, c));
+};
+U.prototype.authWithOAuthToken = U.prototype.bg;
+U.prototype.Yf = function (a, b) {
+x('Firebase.authAnonymously', 1, 2, arguments.length);
+A('Firebase.authAnonymously', 1, a, !1);
+ng('Firebase.authAnonymously', 2, b, !0);
+$g(this.k.M, 'anonymous', {}, b, a);
+};
+U.prototype.authAnonymously = U.prototype.Yf;
+U.prototype.cg = function (a, b, c) {
+x('Firebase.authWithPassword', 2, 3, arguments.length);
+ng('Firebase.authWithPassword', 1, a, !1);
+og('Firebase.authWithPassword', a, 'email');
+og('Firebase.authWithPassword', a, 'password');
+A('Firebase.authWithPassword', 2, b, !1);
+ng('Firebase.authWithPassword', 3, c, !0);
+$g(this.k.M, 'password', a, c, b);
+};
+U.prototype.authWithPassword = U.prototype.cg;
+U.prototype.se = function (a, b) {
+x('Firebase.createUser', 2, 2, arguments.length);
+ng('Firebase.createUser', 1, a, !1);
+og('Firebase.createUser', a, 'email');
+og('Firebase.createUser', a, 'password');
+A('Firebase.createUser', 2, b, !1);
+this.k.M.se(a, b);
+};
+U.prototype.createUser = U.prototype.se;
+U.prototype.Te = function (a, b) {
+x('Firebase.removeUser', 2, 2, arguments.length);
+ng('Firebase.removeUser', 1, a, !1);
+og('Firebase.removeUser', a, 'email');
+og('Firebase.removeUser', a, 'password');
+A('Firebase.removeUser', 2, b, !1);
+this.k.M.Te(a, b);
+};
+U.prototype.removeUser = U.prototype.Te;
+U.prototype.pe = function (a, b) {
+x('Firebase.changePassword', 2, 2, arguments.length);
+ng('Firebase.changePassword', 1, a, !1);
+og('Firebase.changePassword', a, 'email');
+og('Firebase.changePassword', a, 'oldPassword');
+og('Firebase.changePassword', a, 'newPassword');
+A('Firebase.changePassword', 2, b, !1);
+this.k.M.pe(a, b);
+};
+U.prototype.changePassword = U.prototype.pe;
+U.prototype.oe = function (a, b) {
+x('Firebase.changeEmail', 2, 2, arguments.length);
+ng('Firebase.changeEmail', 1, a, !1);
+og('Firebase.changeEmail', a, 'oldEmail');
+og('Firebase.changeEmail', a, 'newEmail');
+og('Firebase.changeEmail', a, 'password');
+A('Firebase.changeEmail', 2, b, !1);
+this.k.M.oe(a, b);
+};
+U.prototype.changeEmail = U.prototype.oe;
+U.prototype.Ve = function (a, b) {
+x('Firebase.resetPassword', 2, 2, arguments.length);
+ng('Firebase.resetPassword', 1, a, !1);
+og('Firebase.resetPassword', a, 'email');
+A('Firebase.resetPassword', 2, b, !1);
+this.k.M.Ve(a, b);
+};
+U.prototype.resetPassword = U.prototype.Ve;
+}());
+<div hidden="" by-vulcanize=""><dom-module id="td-model" assetpath="/">
+	<template>
+		<firebase-collection location="https://amber-heat-3016.firebaseio.com/items" data="{{items}}"></firebase-collection>
+	</template>
+	</dom-module>
+<dom-module id="td-item" assetpath="/">
+	<template>
+		<template is="dom-if" if="{{!editing}}">
+			<div on-dblclick="_editAction">
+				<input type="checkbox" class="toggle" checked="{{item.isCompleted::change}}">
+				<label>{{item.label}}</label>
+				<button class="destroy" on-tap="_destroyAction"></button>
+			</div>
+		</template>
+		<template is="dom-if" if="{{editing}}">
+			<input is="td-input" id="edit" class="edit" value="{{_editingValue::input}}" on-td-input-commit="_commitAction" on-td-input-cancel="_cancelAction" on-blur="_onBlur">
+		</template>
+	</template>
+	</dom-module>
+<dom-module id="td-todos" assetpath="/">
+	<template>
+		<style>			:host {				display: block;			}		</style>
+		<flatiron-director route="{{route}}" hidden=""></flatiron-director>
+		<section id="todoapp">
+			<header id="header">
+				<input is="td-input" id="new-todo" placeholder="What needs to be done?" autofocus="" on-td-input-commit="addTodoAction" on-td-input-cancel="cancelAddTodoAction">
+			</header>
+
+			<template is="dom-if" if="{{items.length}}">
+				<section id="main">
+					<input id="toggle-all" type="checkbox" checked="[[allCompleted]]" on-change="toggleAllCompletedAction">
+					<label for="toggle-all">Mark all as complete</label>
+					<ul id="todo-list" on-td-destroy-item="destroyItemAction">
+						<template id="todo-list-repeater" is="dom-repeat" items="{{items}}" filter="{{matchesFilter(route)}}" observe="completed">
+							<li is="td-item" item="{{item}}"></li>
+						</template>
+					</ul>
+				</section>
+
+				<footer id="footer">
+					<span id="todo-count">
+						<strong>{{activeCount}}</strong>
+						<span>{{_computeItemsLeft(activeCount)}}</span> left
+					</span>
+
+					<iron-selector id="filters" selected="{{route}}" attr-for-selected="route">
+						<li route="">
+							<a href="#/" class$="{{_computeLinkClass(route, '')}}">All</a>
+						</li>
+						<li route="active">
+							<a href="#/active" class$="{{_computeLinkClass(route, 'active')}}">Active</a>
+						</li>
+						<li route="completed">
+							<a href="#/completed" class$="{{_computeLinkClass(route, 'completed')}}">Completed</a>
+						</li>
+					</iron-selector>
+
+					<template is="dom-if" if="{{anyCompleted}}">
+						<button id="clear-completed" on-tap="clearCompletedAction" style="visibility:visible">Clear completed</button>
+					</template>
+
+				</footer>
+			</template>
+
+		</section>
+	</template>
+	</dom-module>
+</div></your></your><script src="elements.build.js"></script></body></html>

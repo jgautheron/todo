@@ -1,0 +1,87 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/firebase-element/firebase.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-collection.html">
+
+<dom-module id="td-model">
+	<template>
+		<firebase-collection
+	      location="https://amber-heat-3016.firebaseio.com/items"
+	      data="{{items}}"></firebase-collection>
+	</template>
+	<script>
+		(function () {
+			'use strict';
+
+			Polymer({
+				is: 'td-model',
+
+				hostAttributes: {
+					hidden: true
+				},
+
+				properties: {
+					items: {
+						type: Array,
+						notify: true
+					},
+					filter: {
+						type: String
+					}
+				},
+
+				_initializeDefaultTodos: function () {
+					this.items = [];
+				},
+
+				newItem: function(label) {
+					label = String(label).trim();
+
+					if (!label) {
+						return;
+					}
+
+					this.push('items', {__firebaseKey__: null, label: label, isCompleted: false});
+				},
+
+				getCompletedCount: function () {
+					return this.items ? this.items.filter(this.filters.completed).length : 0;
+				},
+
+				getActiveCount: function () {
+					return this.items.length - this.getCompletedCount(this.items);
+				},
+
+				matchesFilter: function(item, filter) {
+					var fn = this.filters[filter];
+					return fn ? fn(item) : true;
+				},
+
+				destroyItem: function(item) {
+					var i = this.items.indexOf(item);
+					if (i > -1) {
+						this.splice('items', i, 1)
+					}
+				},
+
+				clearCompletedItems: function () {
+					this.items = this.items.filter(this.filters.active);
+				},
+
+				setItemsCompleted: function(completed) {
+					for (var i = 0; i < this.items.length; ++i) {
+						this.set(['items', i, 'isCompleted'], completed);
+					}
+				},
+
+				filters: {
+					active: function(item) {
+						return !item.isCompleted;
+					},
+					completed: function(item) {
+						return item.isCompleted;
+					}
+				}
+			});
+		})();
+	</script>
+</dom-module>

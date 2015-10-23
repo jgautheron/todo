@@ -1,4 +1,4 @@
-# Polymer Todo
+# Meteor Todo
 
 ### Install
 
